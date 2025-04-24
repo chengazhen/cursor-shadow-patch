@@ -4,9 +4,15 @@ import sys
 import shutil
 import platform
 
+# 设置控制台编码
+if platform.system() == "Windows":
+    import codecs
+
+    sys.stdout = codecs.getwriter("utf-8")(sys.stdout.buffer)
+
 # 获取当前操作系统
 SYSTEM = platform.system()
-print(f"当前操作系统: {SYSTEM}")
+print(f"Current OS: {SYSTEM}")
 
 # 获取脚本所在目录的绝对路径
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -35,7 +41,7 @@ elif SYSTEM == "Linux":
     exe_extension = ""
     output_name = "CursorPatcher"
 else:
-    print(f"不支持的操作系统: {SYSTEM}")
+    print(f"Unsupported OS: {SYSTEM}")
     sys.exit(1)
 
 # 定义依赖文件
@@ -58,11 +64,11 @@ for data_file in data_files:
     pyinstaller_args.append(f"--add-data={data_file}")
 
 # 运行PyInstaller打包
-print(f"正在打包Python脚本为可执行文件...")
+print(f"Packaging Python script to executable...")
 PyInstaller.__main__.run(pyinstaller_args)
 
 output_path = os.path.join("dist", output_name + exe_extension)
 if os.path.exists(output_path):
-    print(f"打包完成！可执行文件位于: {output_path}")
+    print(f"Packaging complete! Executable located at: {output_path}")
 else:
-    print("打包过程中出现错误，未生成可执行文件。")
+    print("Error occurred during packaging, no executable generated.")
