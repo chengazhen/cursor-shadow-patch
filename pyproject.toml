@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cursor-shadow-patch"
+version = "0.1.0"
+description = "Patch Cursor's main.js to force different machine IDs"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [
+    {name = "zetaloop"}
+]
+dependencies = [
+    "pyinstaller>=5.0.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/zetaloop/cursor-shadow-patch"
+"Bug Tracker" = "https://github.com/zetaloop/cursor-shadow-patch/issues"
+
+[tool.setuptools]
+packages = ["cursor_shadow_patch"] 

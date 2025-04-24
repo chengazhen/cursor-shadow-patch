@@ -10,12 +10,28 @@ Patch `out/main.js` to force diffferent machine ids.
 - Platform: Win32 / Darwin / Linux, with Python 3.10+
 - Version: 0.45 ~ 0.49
 
+#### Installation
+
+1. Make sure you have Python 3.10+ installed.
+2. Install dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+
 #### Usage
 
 1. Clone this project (or [download zip](https://github.com/zetaloop/cursor-shadow-patch/archive/refs/heads/main.zip)) and run `patcher.py`.
 2. <kbd>Enter</kbd> * 5.
 3. If it shows all green and no red, youre done.
 4. Next time when you need a new machine id or when youve just updated cursor, run it again.
+
+#### Building executable
+
+To build standalone executable:
+```
+python build.py
+```
+The executable will be generated in the `dist` directory.
 
 #### Note
 
