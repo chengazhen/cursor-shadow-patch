@@ -10,22 +10,16 @@ print(
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 if SYSTEM == "Linux":
-    appimage = appimagepath(
-        input(f"\n{PURPLE}Enter AppImage path: {RESET}(leave blank = auto detect) ")
-    )
+    appimage = appimagepath("")
     appimage_unpacked = appimage_unpack(appimage)
     js = jspath(appimage_detect_jspath(appimage_unpacked))
 else:
     appimage = appimage_unpacked = None
-    js = jspath(
-        input(f"\n{PURPLE}Enter main.js path: {RESET}(leave blank = auto detect) ")
-    )
+    js = jspath("")
 data = load(js)
 is_patched = chk(data, [b"/*csp1*/", b"/*csp2*/", b"/*csp3*/", b"/*csp4*/"])
 
-machineid = randomuuid(
-    input(f"\n{PURPLE}MachineId: {RESET}(leave blank = random uuid) ")
-)
+machineid = randomuuid("")
 # async function machineId(returnRaw) {
 #     let machineid = processOutput(execSync(commands[PLATFORM], { timeout: 5e3 }).toString()),
 #         hash;
@@ -43,7 +37,7 @@ data = replace(
     r"=/\*csp1\*/.*?/\*1csp\*/,",
 )
 
-mac = macaddr(input(f"\n{PURPLE}Mac Address: {RESET}(leave blank = random mac) "))
+mac = macaddr("")
 # function getMacAddress() {
 #     const interfaces = networkInterfaces();
 #     for (const name in interfaces) {
@@ -61,7 +55,7 @@ data = replace(
     r"()return/\*csp2\*/.*?/\*2csp\*/;()",
 )
 
-sqm = input(f"\n{PURPLE}Windows SQM Id: {RESET}(leave blank = empty) ")
+sqm = ""
 # async function sqmId(errorBind) {
 #     if (isWindows) {
 #         const reg = await import("@vscode/windows-registry");
@@ -80,7 +74,7 @@ data = replace(
     r"return/\*csp3\*/.*?/\*3csp\*/",
 )
 
-devid = randomuuid(input(f"\n{PURPLE}devDeviceId: {RESET}(leave blank = random uuid) "))
+devid = randomuuid("")
 # async function devDeviceId(errorBind) {
 #     try {
 #         return await (await import("@vscode/deviceid")).getDeviceId();
