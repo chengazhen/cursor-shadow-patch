@@ -1,4 +1,7 @@
 from _utils import *
+import _utils
+
+globaldir = None
 
 print(
     f"""
@@ -121,5 +124,35 @@ if SYSTEM == "Linux":
     assert appimage_unpacked is not None
     backup(appimage, not is_patched)
     appimage_repack(appimage, appimage_unpacked)
+
+
+# Clean Temporary Files
+def cleantmp(filesglob=["cache*", "*onfig"]):
+    """clean cache-* and .config files"""
+    if not globaldir or not globaldir.exists():
+        return
+    assert globaldir
+    for glob in filesglob:
+        for file in globaldir.glob(glob):
+            try:
+                file.unlink()
+            except Exception as e:
+                print(f"{RED}[ERR] Failed to delete {file}: {e}{RESET}")
+
+
+_utils.cleantmp = cleantmp  # type:ignore
+
+match SYSTEM:
+    case "Windows":
+        tmp = path(os.getenv("APPDATA", "")) / "Cursor"
+    case "Linux":
+        tmp = path(os.getenv("HOME", "")) / ".config" / "Cursor"
+    case "Darwin":
+        tmp = path(os.getenv("HOME", "")) / "Library" / "Application Support" / "Cursor"
+    case _:
+        print(f"{RED}[ERR] Unsupported OS: {SYSTEM}{RESET}")
+        pause()
+        exit()
+clean_tmp(tmp)
 
 pause()

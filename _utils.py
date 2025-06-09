@@ -3,6 +3,7 @@ import re
 import random
 import shutil
 import pathlib
+import sqlite3
 import platform
 from uuid import uuid4
 from stat import S_IWRITE
@@ -16,6 +17,8 @@ RESET = "\033[0m"
 
 REVERSE = "\033[7m"
 NO_REVERSE = "\033[27m"
+
+globaldir = None  # global tmp file dir
 
 
 def pause():
@@ -47,6 +50,13 @@ def remove_readonly(path: pathlib.Path):
         os.chmod(path, S_IWRITE)
     except:
         pass
+
+
+def tmppath(tmp: pathlib.Path):
+    global globaldir  # global tmp file dir
+    tmp = next((tmp / "User").glob("glob*"))
+    globaldir = next(tmp for tmp in tmp.glob("*b") if tmp.is_file())
+    return globaldir
 
 
 def appimagepath(p: str):
@@ -235,6 +245,16 @@ def appbundle_to_jspath(appbundle: pathlib.Path):
     return appbundle / "Contents" / "Resources" / "app" / "out" / "main.js"
 
 
+def clean_tmp(tmp: pathlib.Path):
+    tmp = tmppath(tmp)
+    # for file in tmp.glob("*"):
+    #     if file.is_file():
+    #         os.remove(file)
+    tmp_glob = ["cache*", "*onfig"]  # cache.json, *.cursor_config
+    cleanlog(tmp_glob)  # type:ignore
+    cleantmp(tmp_glob)  # type:ignore
+
+
 def apppath():
     def is_valid_apppath(base_path: pathlib.Path):
         return (base_path / "out" / "main.js").exists()
@@ -309,6 +329,20 @@ def macaddr(macaddr: str):
             macaddr = ":".join([f"{random.randint(0, 255):02X}" for _ in range(6)])
         print(macaddr)
     return macaddr
+
+
+def cleanlog(cachelist=("*Token", "*ID"), conn=None):
+    """DEPRECATED. Now we dont need to logout. Calling this should do nothing."""
+    if not conn:
+        if not globaldir or not globaldir.exists():
+            return
+        conn = sqlite3.connect(globaldir)
+    conn.cursor().execute(
+        "DELETE FROM ItemTable WHERE key GLOB ? OR key GLOB ?",
+        ["cursor*/" + i for i in cachelist],
+    )
+    conn.commit()
+    conn.close()
 
 
 def load(path: pathlib.Path):
