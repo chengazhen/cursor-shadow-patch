@@ -22,7 +22,8 @@ globaldir = None  # global tmp file dir
 
 
 def pause():
-    input(f"\n{REVERSE}Press Enter to continue...{NO_REVERSE}")
+    # No pause - program will exit directly
+    pass
 
 
 SYSTEM = platform.system()
